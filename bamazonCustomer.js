@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
 });
 
 // Connect to database
-connection.connect(function(err){
+connection.connect((err) => {
     if(err){
     console.log('Error connecting to Db');
     return;
@@ -49,7 +49,7 @@ var stopApp = function(){
 }
 // Start the app
 var beginApp = function(){
-    connection.query("SELECT * FROM Products", function(err, result) {
+    connection.query("SELECT * FROM Products", (err, result) => {
         if (err) throw err;
         return (getBamazonProducts(result));
       
@@ -57,7 +57,7 @@ var beginApp = function(){
 }
 
     // Function to display all of the products available for sale in a table
-    var getBamazonProducts = function (products){
+    var getBamazonProducts = products => {
         console.log("Hello, Welcome to Bamazon! Here are all of the products, their costs, and current stock.");
         for (var i = 0; i < products.length; i++) {
             var productsResults = "\r\n"+
@@ -75,7 +75,7 @@ var beginApp = function(){
         prompt.start();
         console.log("Please enter the ID of the product you would like to buy.");
 
-        prompt.get(schema, function (err, result) {
+        prompt.get(schema, (err, result) => {
             if (err){
                 console.log(err)
             }
@@ -86,7 +86,7 @@ var beginApp = function(){
 
             // Function to check the inventory of an item
             var checkInventory = function(){
-                connection.query('SELECT * FROM Products WHERE ItemID =' + userChoiceID, function(err, result) {
+                connection.query('SELECT * FROM Products WHERE ItemID =' + userChoiceID, (err, result) => {
                     if (err) throw err;
                     //console.log(result);
 
@@ -97,19 +97,19 @@ var beginApp = function(){
                     var totalCost= productsPrice * userWantsToBuy;
 
                     if (userWantsToBuy > productInventory || productInventory === 0){
-                        console.log("Apologies but there isn't enough in stock to complete your order. Please try again."+"\r\n"+"\r\n");
+                        console.log("Apologies but there isn't enough in stock to complete your order. Lol. Please try again."+"\r\n"+"\r\n");
                         userSelectID();
                     } else {
                         console.log("There are "+result[0].StockQuantity+" of "+result[0].ProductName);
                         console.log("You are purchasing "+ userWantsToBuy +" "+result[0].ProductName+"s at $"+ result[0].Price+" per item.");
                         console.log("Your total is $"+totalCost);
-                        connection.query('UPDATE Products SET StockQuantity = '+isInStock+' WHERE ItemID ='+userChoiceID, function(err, result){
+                        connection.query('UPDATE Products SET StockQuantity = '+isInStock+' WHERE ItemID ='+userChoiceID, (err, result) => {
                         if (err) throw err;
-                            connection.query('SELECT ItemID, ProductName, DepartmentName, Price, StockQuantity FROM products WHERE ItemID ='+userChoiceID, function(err, result){
+                            connection.query('SELECT ItemID, ProductName, DepartmentName, Price, StockQuantity FROM products WHERE ItemID ='+userChoiceID, (err, result) => {
                                 //console.log(result);
                             }); 
                         });
-                        prompt.get(schema2, function (err, result) {
+                        prompt.get(schema2, (err, result) => {
                             if (err){
                                 console.log(err)
                             }
